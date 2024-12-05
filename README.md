@@ -1,4 +1,4 @@
-# **Step-by-Step Ubuntu Setup for Machine Learning**
+# **Step-by-Step Ubuntu Setup for Machine Learning with CUDA, TensorFlow, PyTorch, and TensorRT**
 
 This guide walks you through the installation of essential tools and libraries for machine learning and deep learning development on Ubuntu, including NVIDIA CUDA, TensorFlow, PyTorch, TensorRT, and ONNX.
 
@@ -169,7 +169,7 @@ pip3 install tensorrt
 python3 -c "import tensorrt as trt; print(trt.__version__)"
 ```
 
-### **Expected Result:**
+### **Expected Result:**  
 The installed version of TensorRT should be printed without errors.
 
 ---
@@ -226,42 +226,209 @@ pip3 install onnx-torch
 ---
 
 ## **11. Verifications**
-After completing the setup, verify that all components are correctly installed and working.
+After completing the setup, run the following verifications to ensure everything is working correctly.
 
-### **11.1. Verify NVIDIA GPU and CUDA:**
+### **11.1. Verify NVIDIA GPU and CUDA Installation:**
+
+#### **Check NVIDIA GPU Status:**
 
 ``` 
 nvidia-smi
+```
+
+**Expected Result:**  
+- You should see a table with the following details:  
+    - GPU model (e.g., "Tesla V100", "RTX 3090")
+    - Driver version (e.g., "460.39")
+    - CUDA version (e.g., "CUDA Version 11.2")
+    - Memory usage details (used, free, total)
+
+#### **Verify CUDA Installation:**
+
+``` 
 nvcc --version
 ```
 
 **Expected Result:**  
-- `nvidia-smi` should show your GPU details.
-- `nvcc --version` should return the CUDA version installed.
+- The command should output the version of the installed CUDA toolkit, for example:
 
-### **11.2. Verify TensorFlow GPU Access:**
+```  
+nvcc: NVIDIA (R) Cuda compiler driver Copyright (c) 2005-2021 NVIDIA Corporation Built on Sun_Apr_11_00:42:13_PDT_2021 Cuda compilation tools, release 11.2, V11.2.67
+```
+
+
+#### **Test CUDA with TensorFlow:**
 
 ``` 
 python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
 ```
 
 **Expected Result:**  
-The list of available GPUs should be printed, confirming that TensorFlow can access your GPU.
+- If TensorFlow detects a compatible GPU, it will return a list of available GPU devices, for example: 
 
-### **11.3. Verify TensorRT Installation:**
+``` 
+[PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
+```
+
+
+- If no GPU is detected, the list will be empty:  
+
+```
+[]
+```
+
+
+---
+
+### **11.2. Verify TensorFlow Installation (with CUDA support):**
+
+#### **Check TensorFlow Version:**
+
+``` 
+python3 -c "import tensorflow as tf; print(tf.__version__)"
+```
+
+**Expected Result:**  
+- This will print the installed TensorFlow version (e.g., `2.9.0` or another version compatible with CUDA).  
+- Ensure that the installed version is compatible with the CUDA version (check the [TensorFlow compatibility guide](https://www.tensorflow.org/install/source#gpu) if unsure).
+
+#### **Check TensorFlow GPU Support:**
+
+``` 
+python3 -c "import tensorflow as tf; print(tf.test.is_gpu_available())"
+```
+
+**Expected Result:**  
+- If TensorFlow is correctly configured with GPU support, it should return `True`.  
+- If it returns `False`, there might be an issue with the CUDA or cuDNN setup.
+
+---
+
+### **11.3. Verify PyTorch Installation (with CUDA support):**
+
+#### **Check PyTorch Version:**
+
+``` 
+python3 -c "import torch; print(torch.__version__)"
+```
+
+**Expected Result:**  
+- This will print the installed PyTorch version (e.g., `1.12.0`).  
+- Ensure that the PyTorch version installed is compatible with your CUDA version (check the [PyTorch installation guide](https://pytorch.org/get-started/locally/) for compatibility).
+
+#### **Verify GPU Availability in PyTorch:**
+
+``` 
+python3 -c "import torch; print(torch.cuda.is_available())"
+```
+
+**Expected Result:**  
+- If PyTorch has been correctly configured with GPU support, this should return `True`.  
+- If it returns `False`, the issue might be related to the CUDA or PyTorch installation.
+
+---
+
+### **11.4. Verify TensorRT Installation:**
+
+#### **Check TensorRT Version:**
 
 ``` 
 python3 -c "import tensorrt as trt; print(trt.__version__)"
 ```
 
 **Expected Result:**  
-The TensorRT version installed should be displayed.
+- This will print the installed TensorRT version (e.g., `8.6.1`).  
+- If the command fails, it indicates a problem with the TensorRT installation.
 
-### **11.4. Verify ONNX Installation:**
+#### **Verify TensorRT Integration with TensorFlow:**
+
+``` 
+python3 -c "import tensorflow as tf; from tensorflow.python.compiler.tensorrt import trt_convert; print(trt_convert)"
+```
+
+**Expected Result:**  
+- If TensorFlow-TensorRT integration is correctly set up, this will print the `trt_convert` module’s details without errors.
+- If there's an error, check the version compatibility between TensorFlow and TensorRT.
+
+---
+
+### **11.5. Verify ONNX Installation:**
+
+#### **Check ONNX Version:**
 
 ``` 
 python3 -c "import onnx; print(onnx.__version__)"
 ```
 
 **Expected Result:**  
-The ONNX version installed should be printed.
+- This should print the version of the ONNX library, for example, `1.11.0`.
+
+#### **Check ONNX-TensorFlow Integration:**
+
+``` 
+python3 -c "import onnx_tf; print(onnx_tf.__version__)"
+```
+
+**Expected Result:**  
+- This will print the installed `onnx-tf` version, confirming that ONNX models can be converted to TensorFlow format.
+
+---
+
+### **11.6. Verify ONNX-PyTorch Support:**
+
+#### **Check ONNX-PyTorch Version:**
+
+``` 
+python3 -c "import onnx_torch; print(onnx_torch.__version__)"
+```
+
+**Expected Result:**  
+- This will print the installed `onnx-torch` version, confirming that ONNX models can be converted to PyTorch format.
+
+---
+
+### **11.7. Additional Verification: TensorFlow-TensorRT Integration:**
+
+#### **Check TensorFlow-TensorRT Installation:**
+
+``` 
+python3 -c "import tensorflow as tf; from tensorflow.python.compiler.tensorrt import trt_convert; print(trt_convert)"
+```
+
+**Expected Result:**  
+- If TensorFlow-TensorRT is installed and properly configured, this will print the `trt_convert` module details, confirming integration.
+
+#### **Test TensorFlow-TensorRT Model Conversion:**
+
+To test TensorFlow-TensorRT integration, you can try converting a simple model:
+
+``` 
+python3 -c "import tensorflow as tf; model = tf.keras.applications.MobileNetV2(weights='imagenet'); model.save('mobilenet_v2')"
+python3 -c "from tensorflow.python.compiler.tensorrt import trt_convert; converter = trt_convert.TrtGraphConverterV2(input_saved_model_dir='mobilenet_v2'); converter.convert()"
+```
+
+**Expected Result:**  
+- The model should be successfully converted to TensorRT format, and no errors should occur during the process.
+
+---
+
+### **11.8. Verify Installed Python Packages:**
+
+To ensure all necessary Python packages are installed, use the following command to list them:
+
+``` 
+pip3 list
+```
+
+**Expected Result:**  
+- This will list all installed Python packages. Ensure that `tensorflow`, `torch`, `tensorrt`, `onnx`, `keras`, and other required libraries appear in the list.
+
+---
+
+### Summary of Expected Results:
+
+1. **NVIDIA GPU and CUDA Installation**: Successful detection of GPU and CUDA version.
+2. **TensorFlow Installation**: GPU should be listed in `tf.config.list_physical_devices('GPU')`.
+3. **PyTorch Installation**: `torch.cuda.is_available()` should return `True`.
+4. **TensorRT Installation**: `import tensorrt as trt; print(trt.__version__)` should print the TensorRT version.
+5. **ONNX and ONNX-TF/PyTorch**: Version numbers for both `onnx`, `onnx-tf`, and `onnx-torch` should be printed successfully.
