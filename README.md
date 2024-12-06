@@ -104,11 +104,10 @@ python3 -m pip install 'tensorflow[and-cuda]'
 ## **5. Install cuDNN and TensorFlow Libraries**
 Install NVIDIA's cuDNN for optimized deep learning performance and ensure TensorFlow's GPU support.
 
-### **5.1. Install cuDNN:**
+### **5.1. Download and Install cuDNN:**
 
-``` 
-sudo apt-get install libcudnn8 libcudnn8-dev
-```
+You can download and install cuDNN from [here](https://developer.nvidia.com/cudnn).
+
 
 ### **5.2. Install TensorBoard:**
 
